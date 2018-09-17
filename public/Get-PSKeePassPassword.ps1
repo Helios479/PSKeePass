@@ -1,3 +1,55 @@
+<#
+.SYNOPSIS
+
+Get password from KeePass database
+
+.DESCRIPTION
+
+Get password from KeePass database. Will set the password in the clipboard unless "-Show" is specified, in which case it will type the password as plain text in the console.
+
+.PARAMETER Title
+
+Title of the KeePass entry for the desired password
+
+.PARAMETER Show
+
+Switch for typing the password in plain text to the console rather than setting the clipboard
+
+.PARAMETER DatabasePath
+
+Path to the KeePass database
+
+.PARAMETER DatabasePassword
+
+Password to the KeePass database
+
+.INPUTS
+
+None
+
+.OUTPUTS
+
+System.String
+
+.EXAMPLE
+
+C:\PS> Get-PSKeePassPassword -Title 'GitHub'
+Set the password for the 'GitHub' entry to the clipboard
+
+.EXAMPLE
+
+C:\PS> Get-PSKeePassPassword -Title 'GitHub' -Show
+Type the password for the 'GitHub' entry to the console
+
+.EXAMPLE
+
+C:\PS> Get-PSKeePassPassword -Title 'GitHub' -DatabasePath "$env:UserProfile\WorkPasswords.kdbx" -DatabasePassword 'password'
+Set the password for the 'GitHub' entry from the KeePass database "WorkPasswords.kdbx" using the database password 'password'
+
+.LINK
+
+Get-PSKeePassTitles
+#>
 Function Get-PSKeePassPassword {
     [cmdletbinding()]
     param(
@@ -37,19 +89,24 @@ Function Get-PSKeePassPassword {
     }
     Begin {
         $Title = $PSBoundParameters[$ParameterName]
+        Write-Verbose "Loading database at $DatabasePath"
         $Database = New-PSKeePassConnection -DatabasePath $DatabasePath -DatabasePassword $DatabasePassword
     }
     Process{
+        Write-Verbose "Getting entry for $Title"
         $Entry = $Database.RootGroup.GetObjects($true, $true) | Where-Object -FilterScript {$_.Strings.ReadSafe("Title") -eq $Title}
         $Password = $Entry.Strings.ReadSafe("Password")
         If ($Show) {
+            Write-Verbose "-Show specified; return password as plain text"
             Return $Password
         }
         Else {
+            Write-Verbose "Setting password to clipboard"
             $Password | Set-Clipboard
         }
     }
     End{
+        Write-Verbose "Closing database"
         $Database.Close()
     }
 }
