@@ -1,7 +1,7 @@
 Function New-PSKeePassConfig {
     [cmdletbinding()]
     param(
-        [parameter()]$ConfigPath = "$((Get-Item $PSScriptRoot).Parent.FullName)Config.ps1",
+        [parameter()]$ConfigPath = "$((Get-Item $PSScriptRoot).Parent.FullName)\Config.xml",
         [parameter()][Switch]$Force
     )
     # Check for existing Config.ps1
@@ -43,5 +43,5 @@ Function New-PSKeePassConfig {
     }
     
     # Export Config
-    $ConfigObj | Out-File -FilePath $ConfigPath -Force
+    $ConfigObj | Export-Clixml -Path $ConfigPath
 }
