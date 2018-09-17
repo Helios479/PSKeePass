@@ -4,16 +4,20 @@ Function Get-PSKeePassTitles {
         $DatabasePath = $Script:Config.KeePassDatabasePath,
         $DatabasePassword = (Import-Clixml $Script:Config.KeePassDatabasePasswordFile).GetNetworkCredential().Password
     )
-    Try {
-        $Titles = @()
+    Begin {
         $Database = New-PSKeePassConnection -DatabasePath $DatabasePath -DatabasePassword $DatabasePassword
-        $Database.RootGroup.GetObjects($true, $true) | %{$Titles += ($_.Strings.ReadSafe("Title"))}
-        Return $Titles
     }
-    Catch {
-        Throw $_
+    Process {
+        Try {
+            $Titles = @()
+            $Database.RootGroup.GetObjects($true, $true) | %{$Titles += ($_.Strings.ReadSafe("Title"))}
+            Return $Titles
+        }
+        Catch {
+            Throw $_
+        }
     }
-    Finally {
+    End {
         $Database.Close()
     }
 }
