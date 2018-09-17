@@ -1,3 +1,44 @@
+<#
+.SYNOPSIS
+
+Get all titles in KeePass database
+
+.DESCRIPTION
+
+Get all titles in KeePass database
+
+.PARAMETER DatabasePath
+
+Path to KeePass database
+
+.PARAMETER DatabasePassword
+
+Password to KeePass database
+
+.INPUTS
+
+None
+
+.OUTPUTS
+
+System.String
+
+.EXAMPLE
+
+C:\PS> Get-PSKeePassTitles
+
+Get all titles from KeePass database set up on Config.xml
+
+.EXAMPLE
+
+C:\PS> Get-PSKeePassTitles -DatabasePath "$env:UserProfile\WorkPasswords.kdbx" -DatabasePassword 'password'
+
+Get all titles in KeePass database "WorkPasswords.kdbx" using password 'password'
+
+.LINK
+
+Get-PSKeePassPassword
+#>
 Function Get-PSKeePassTitles {
     [cmdletbinding()]
     param(
