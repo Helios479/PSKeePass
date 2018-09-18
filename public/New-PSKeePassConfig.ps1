@@ -1,3 +1,39 @@
+<#
+.SYNOPSIS
+
+Creates config for PSKeePass module
+
+.DESCRIPTION
+
+Creates config for PSKeePass module.
+Gets location of KeePass exe and XmlSerializers.dll for loading assembly, specified location of KeePass database, and stores password to database as a PSCredential exported to .xml
+
+.PARAMETER ConfigPath
+
+Path for export of config .xml
+
+.PARAMETER Force
+
+Force overwrite existing config file
+
+.INPUTS
+
+None
+
+.OUTPUTS
+
+None
+
+.EXAMPLE
+
+C:\PS> New-PSKeePassConfig
+Creates a new config file and exports to default location
+
+.EXAMPLE
+
+C:\PS> New-PSKeePassConfig -ConfigPath "$env:UserProfile\KeePassConfig.xml" -Force
+Creates a new config file and exports as "KeePassConfig.xml" and overwrites if necessary
+#>
 Function New-PSKeePassConfig {
     [cmdletbinding()]
     param(
